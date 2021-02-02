@@ -10,12 +10,23 @@ import java.sql.Statement;
 import java.util.List;
 
 public class TodoDao {
-    public int addTodo(TodoDto todoDto) throws SQLException {
+    private Connection connection;
+    private Statement statement;
+
+    public TodoDao() {
         DatabaseInitializer databaseInitializer = new DatabaseInitializer();
-        Connection connection = DriverManager.getConnection(databaseInitializer.getDbUrl(),
-                databaseInitializer.getUser(),
-                databaseInitializer.getPassword());
-        Statement statement = connection.createStatement();
+        try {
+            connection = DriverManager.getConnection(databaseInitializer.getDbUrl(),
+                    databaseInitializer.getUser(),
+                    databaseInitializer.getPassword());
+
+            statement = connection.createStatement();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public int addTodo(TodoDto todoDto) throws SQLException {
         String insertQuery = "insert into todo(title, name, sequence) values('"
                 + todoDto.getTitle() + "', '"
                 + todoDto.getName() + "', "
@@ -25,7 +36,6 @@ public class TodoDao {
     }
 
     public List<TodoDto> getTodo(){
-
     }
 
     public int updateTodo(TodoDto todoDto){
