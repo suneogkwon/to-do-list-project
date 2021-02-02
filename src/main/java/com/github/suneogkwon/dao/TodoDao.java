@@ -57,7 +57,19 @@ public class TodoDao {
         return todoDtoList;
     }
 
-    public int updateTodo(TodoDto todoDto) {
+    public int updateTodo(TodoDto todoDto) throws SQLException {
+        DatabaseInitializer databaseInitializer = new DatabaseInitializer();
+        Connection connection = DriverManager.getConnection(databaseInitializer.getDbUrl(),
+                databaseInitializer.getUser(),
+                databaseInitializer.getPassword());
 
+        Statement statement = connection.createStatement();
+        String nextType = "DOING";
+
+        if(todoDto.getType().equals("DOING")){
+            nextType = "DONE";
+        }
+        String updateQuery = "update todo set type = '" + nextType + "' where id = " + todoDto.getId() + ";";
+        return statement.executeUpdate(updateQuery);
     }
 }

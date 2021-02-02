@@ -1,2 +1,0 @@
-create table member(id int auto_increment not null , name varchar(255) not null , email varchar(255) , phoneNumber varchar(255) not null , primary key (id));
-insert into member (name,email,phoneNumber) values ('tester','tester@gmail.com','010-1234-5678');
