@@ -22,6 +22,9 @@ public class TodoDao {
                 + todoDto.getName() + "', "
                 + todoDto.getSequence() + ");";
 
+        connection.close();
+        statement.close();
+
         return statement.executeUpdate(insertQuery);
     }
 
@@ -46,6 +49,10 @@ public class TodoDao {
             todoDto.setRegdate(resultSet.getString("regdate"));
             todoDtoList.add(todoDto);
         }
+
+        connection.close();
+        statement.close();
+        resultSet.close();
 
         return todoDtoList;
     }
