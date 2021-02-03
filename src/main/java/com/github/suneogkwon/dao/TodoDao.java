@@ -8,37 +8,51 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TodoDao {
+    private String driver = "org.h2.Driver";
+    private String dbUrl = "jdbc:h2:mem:todolist";
+    private String user = "sa";
+    private String password = "";
+    private String createTableQuery = "CREATE TABLE todo ( " +
+            "id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT, " +
+            "title VARCHAR(255) NOT NULL, " +
+            "name VARCHAR(100) NOT NULL, " +
+            "sequence INT(1) NOT NULL, " +
+            "type VARCHAR(20) DEFAULT 'TODO', " +
+            "regdate DATETIME DEFAULT NOW(), " +
+            "PRIMARY KEY (id) );";
+    private boolean isCreateTable = false;
+    private Connection connection;
+    private Statement statement;
+    private ResultSet resultSet;
 
-    public int addTodo(TodoDto todoDto) throws SQLException {
-        DatabaseInitializer databaseInitializer = new DatabaseInitializer();
-        Connection connection = DriverManager.getConnection(databaseInitializer.getDbUrl(),
-                databaseInitializer.getUser(),
-                databaseInitializer.getPassword());
+    public int addTodo(TodoDto todoDto) throws SQLException, ClassNotFoundException {
+        createTable();
+        Class.forName(driver);
+        String query = "insert into todo(title, name, sequence) values(?,?,?);";
 
-        Statement statement = connection.createStatement();
-
-        String insertQuery = "insert into todo(title, name, sequence) values('"
-                + todoDto.getTitle() + "', '"
-                + todoDto.getName() + "', "
-                + todoDto.getSequence() + ");";
+        connection = DriverManager.getConnection(dbUrl,user,password);
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1,todoDto.getTitle());
+        preparedStatement.setString(2,todoDto.getName());
+        preparedStatement.setInt(3,todoDto.getSequence());
+        int executeUpdate = preparedStatement.executeUpdate();
 
         connection.close();
         statement.close();
 
-        return statement.executeUpdate(insertQuery);
+        return executeUpdate;
     }
 
-    public List<TodoDto> getTodo() throws SQLException {
-        DatabaseInitializer databaseInitializer = new DatabaseInitializer();
-        Connection connection = DriverManager.getConnection(databaseInitializer.getDbUrl(),
-                databaseInitializer.getUser(),
-                databaseInitializer.getPassword());
+    public List<TodoDto> getTodo() throws SQLException, ClassNotFoundException {
+        createTable();
+        Class.forName(driver);
+        String query = "select id, title, name, sequence, type, regdate from todo order by regdate desc sequence asc";
 
-        Statement statement = connection.createStatement();
+        connection = DriverManager.getConnection(dbUrl,user,password);
+        statement = connection.createStatement();
+        resultSet = statement.executeQuery(query);
 
         List<TodoDto> todoDtoList = new ArrayList<>();
-        String selectQuery = "select id, title, name, sequence, type, regdate from todo order by regdate desc";
-        ResultSet resultSet = statement.executeQuery(selectQuery);
         while (resultSet.next()) {
             TodoDto todoDto = new TodoDto();
             todoDto.setId(resultSet.getLong("id"));
@@ -57,19 +71,35 @@ public class TodoDao {
         return todoDtoList;
     }
 
-    public int updateTodo(TodoDto todoDto) throws SQLException {
-        DatabaseInitializer databaseInitializer = new DatabaseInitializer();
-        Connection connection = DriverManager.getConnection(databaseInitializer.getDbUrl(),
-                databaseInitializer.getUser(),
-                databaseInitializer.getPassword());
+    public int updateTodo(TodoDto todoDto) throws SQLException, ClassNotFoundException {
+        createTable();
+        Class.forName(driver);
+        String query = "update todo set type = ? where id = ?;";
 
-        Statement statement = connection.createStatement();
+        connection = DriverManager.getConnection(dbUrl,user,password);
+
+
         String nextType = "DOING";
 
         if(todoDto.getType().equals("DOING")){
             nextType = "DONE";
         }
-        String updateQuery = "update todo set type = '" + nextType + "' where id = " + todoDto.getId() + ";";
+
+
         return statement.executeUpdate(updateQuery);
+    }
+
+    private void createTable() throws ClassNotFoundException, SQLException {
+        if(isCreateTable)
+           return;
+        Class.forName(driver);
+
+        connection = DriverManager.getConnection(dbUrl,user,password);
+        statement = connection.createStatement();
+        statement.execute(createTableQuery);
+        isCreateTable = true;
+
+        connection.close();
+        statement.close();
     }
 }
