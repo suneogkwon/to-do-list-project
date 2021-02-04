@@ -1,8 +1,6 @@
 package com.github.suneogkwon.dao;
 
 import com.github.suneogkwon.dto.TodoDto;
-import com.github.suneogkwon.setting.DatabaseInitializer;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +18,7 @@ public class TodoDao {
             "type VARCHAR(20) DEFAULT 'TODO', " +
             "regdate DATETIME DEFAULT NOW(), " +
             "PRIMARY KEY (id) );";
-    private boolean isCreateTable = false;
+    private static boolean isCreateTable = false;
     private Connection connection;
     private Statement statement;
     private ResultSet resultSet;
@@ -38,7 +36,7 @@ public class TodoDao {
         int executeUpdate = preparedStatement.executeUpdate();
 
         connection.close();
-        statement.close();
+        preparedStatement.close();
 
         return executeUpdate;
     }
@@ -74,24 +72,26 @@ public class TodoDao {
     public int updateTodo(TodoDto todoDto) throws SQLException, ClassNotFoundException {
         createTable();
         Class.forName(driver);
-        String query = "update todo set type = ? where id = ?;";
+        String updateQuery = "update todo set type = ? where id = ?;";
+        String nextType = "DOING";
 
         connection = DriverManager.getConnection(dbUrl,user,password);
-
-
-        String nextType = "DOING";
+        PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
 
         if(todoDto.getType().equals("DOING")){
             nextType = "DONE";
         }
 
+        preparedStatement.setString(1, nextType);
+        preparedStatement.setLong(2, todoDto.getId());
 
-        return statement.executeUpdate(updateQuery);
+        return preparedStatement.executeUpdate();
     }
 
     private void createTable() throws ClassNotFoundException, SQLException {
         if(isCreateTable)
            return;
+
         Class.forName(driver);
 
         connection = DriverManager.getConnection(dbUrl,user,password);
