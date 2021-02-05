@@ -1,14 +1,12 @@
 package com.github.suneogkwon.dto;
 
-import java.time.LocalDate;
-
 public class TodoDto {
     private Long id;
     private String title;
     private String name;
     private int sequence;
     private String type = "TODO";
-    private String regdate = String.valueOf(LocalDate.now());
+    private String regdate;
 
     @Override
     public String toString() {

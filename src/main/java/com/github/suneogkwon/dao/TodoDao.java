@@ -26,14 +26,13 @@ public class TodoDao {
     public int addTodo(TodoDto todoDto) throws SQLException, ClassNotFoundException {
         createTable();
 
-        String query = "insert into todolist(title, name, sequence, regdate) values(?,?,?,?);";
+        String query = "insert into todolist(title, name, sequence) values(?,?,?);";
 
         connection = DriverManager.getConnection(dbUrl,user,password);
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setString(1,todoDto.getTitle());
         preparedStatement.setString(2,todoDto.getName());
         preparedStatement.setInt(3,todoDto.getSequence());
-        preparedStatement.setString(4, todoDto.getRegdate());
         int executeUpdate = preparedStatement.executeUpdate();
 
         connection.close();
@@ -45,7 +44,7 @@ public class TodoDao {
     public List<TodoDto> getTodo() throws SQLException, ClassNotFoundException {
         createTable();
 
-        String query = "select * from todolist order by regdate desc, sequence asc";
+        String query = "select id, title, name, sequence, type, left(regdate, 10) as regdate from todolist order by regdate desc, sequence asc";
 
         connection = DriverManager.getConnection(dbUrl,user,password);
         statement = connection.createStatement();
@@ -79,7 +78,7 @@ public class TodoDao {
         connection = DriverManager.getConnection(dbUrl,user,password);
         PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
 
-        if(todoDto.getType().equals("DOING")){
+        if(todoDto.getType().compareTo("DOING") == 0){
             nextType = "DONE";
         }
 

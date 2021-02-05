@@ -55,7 +55,7 @@
     function checkInputs() {
         let form = (document).getElementById('add-todo');
         let radios = form.querySelectorAll('input[type=radio]');
-        
+
         for(let radio of radios) {
             if (radio['checked'])
                 return true;

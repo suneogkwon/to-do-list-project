@@ -33,8 +33,8 @@
                 </h3>
                 <p class="todo-content">
                     등록날짜:<%=todoDto.getRegdate()%>, <%=todoDto.getName()%>, 우선순위 <%=todoDto.getSequence()%>
+                    <button class="update-btn" onclick="updateTodo(<%=todoDto.getId()%>, '<%=todoDto.getType()%>')">→</button>
                 </p>
-                <button class="update-btn" onclick="updateTodo()">→</button>
             </div>
             <% }
             }
@@ -52,8 +52,8 @@
                 </h3>
                 <p class="todo-content">
                     등록날짜:<%=todoDto.getRegdate()%>, <%=todoDto.getName()%>, 우선순위 <%=todoDto.getSequence()%>
+                    <button class="update-btn" onclick="updateTodo(<%=todoDto.getId()%>, '<%=todoDto.getType()%>')">→</button>
                 </p>
-                <button class="update-btn" onclick="updateTodo()">→</button>
             </div>
             <% }
             }
@@ -80,8 +80,25 @@
     </ul>
 </div>
 <script>
-    function updateTodo() {
+    let httpRequest;
 
+    function updateTodo(id, type) {
+        httpRequest = new XMLHttpRequest();
+
+        httpRequest.onreadystatechange = function(){
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if(httpRequest.status === 200){
+                    alert(httpRequest.responseText);
+                }
+            }
+        }
+
+        httpRequest.open('PUT', '/main?id=' + id + '&type=' + type);
+        httpRequest.send();
+    }
+
+    function refreshTable() {
+        let table = document.getElementById('todo-list');
     }
 </script>
 </body>

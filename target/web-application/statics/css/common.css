@@ -17,6 +17,7 @@ h1, h2, h3, h4, h5{margin:0}
 #todo-list .todo-content-wrap {background-color: aliceblue;padding: 20px;margin-top:10px}
 #todo-list .todo-title{font-size: 1.2em;}
 #todo-list .todo-content{font-size: 0.8em;}
+#todo-list .todo-content button {float:right;}
 
 /* todoForm.jsp */
 .sub-title {width:100%; padding:10px; background-color: steelblue}
