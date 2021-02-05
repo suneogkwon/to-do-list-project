@@ -56,12 +56,11 @@
         let form = (document).getElementById('add-todo');
         let radios = form.querySelectorAll('input[type=radio]');
 
-
         for(let radio of radios) {
-            if (radio['checked']) {
-                console.log(radio['checked']);
-            }
+            if (radio['checked'])
+                return true;
         }
+        return false;
     }
 </script>
 </body>

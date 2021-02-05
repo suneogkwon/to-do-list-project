@@ -26,13 +26,14 @@ public class TodoDao {
     public int addTodo(TodoDto todoDto) throws SQLException, ClassNotFoundException {
         createTable();
 
-        String query = "insert into todolist(title, name, sequence) values(?,?,?);";
+        String query = "insert into todolist(title, name, sequence, regdate) values(?,?,?,?);";
 
         connection = DriverManager.getConnection(dbUrl,user,password);
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setString(1,todoDto.getTitle());
         preparedStatement.setString(2,todoDto.getName());
         preparedStatement.setInt(3,todoDto.getSequence());
+        preparedStatement.setString(4, todoDto.getRegdate());
         int executeUpdate = preparedStatement.executeUpdate();
 
         connection.close();

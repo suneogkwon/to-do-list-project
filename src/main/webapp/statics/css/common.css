@@ -1,17 +1,22 @@
 @charset "UTF-8";
 
-body {background-color: grey}
-ul {display:flex; width: 1000px; margin-left: 160px; list-style: none; padding:20px}
-ul > li {flex:1;padding-left:10px;}
+body {background-color: lightgrey}
+*{box-sizing: border-box;}
+h1, h2, h3, h4, h5{margin:0}
 
 /* main.jsp */
 .top-div {padding:20px}
-.title {transform: rotate(-30deg);height: 100px;line-height: 100px;margin: 0;display: inline-block;color: steelblue;}
+.title {height: 100px;line-height: 100px;margin: 0;display: inline-block;color: steelblue;}
 .wrapper {width:1200px; min-height: 500px; margin:0 auto;background-color: white}
 .inner-wrapper {text-align: center;}
-.add-button {display: block; margin: 30px 0; width:200px; line-height:40px; text-align:center; float:right; background-color:dodgerblue; color:white; text-decoration:none;}
-#todo-list .sub-title{height: 70px;background-color: steelblue;text-align: center;line-height: 70px;color: white;}
-#todo-list .todo-content-wrap {background-color: aliceblue;padding: 10px;margin:10px 0}
+.add-button {display: block; margin: 30px 0; padding:0 20px; line-height:40px; text-align:center; float:right; background-color:dodgerblue; color:white; text-decoration:none;}
+#todo-list {display:flex; margin:0 20px 0 160px; list-style: none; padding:20px}
+#todo-list li {flex:1}
+#todo-list li:nth-child(2){margin:0 10px}
+#todo-list .sub-title{margin: 0;background-color: steelblue;text-align: center;line-height: 40px;color: white;}
+#todo-list .todo-content-wrap {background-color: aliceblue;padding: 20px;margin-top:10px}
+#todo-list .todo-title{font-size: 1.2em;}
+#todo-list .todo-content{font-size: 0.8em;}
 
 /* todoForm.jsp */
 .sub-title {width:100%; padding:10px; background-color: steelblue}

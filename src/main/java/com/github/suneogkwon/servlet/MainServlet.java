@@ -26,8 +26,6 @@ public class MainServlet extends HttpServlet {
         List<TodoDto> doingList = new ArrayList<>();
         List<TodoDto> doneList = new ArrayList<>();
 
-        resp.setCharacterEncoding("text/html;charset=utf-8");
-
         try {
             list = todoDao.getTodo();
         } catch (SQLException throwables) {
