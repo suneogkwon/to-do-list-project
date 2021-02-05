@@ -7,10 +7,10 @@ import java.util.List;
 
 public class TodoDao {
     private String driver = "org.h2.Driver";
-    private String dbUrl = "jdbc:h2:mem:todolist";
+    private String dbUrl = "jdbc:h2:mem:test;MODE=Mysql;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1;";
     private String user = "sa";
     private String password = "";
-    private String createTableQuery = "CREATE TABLE todo ( " +
+    private String createTableQuery = "CREATE TABLE todolist ( " +
             "id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT, " +
             "title VARCHAR(255) NOT NULL, " +
             "name VARCHAR(100) NOT NULL, " +
@@ -25,8 +25,8 @@ public class TodoDao {
 
     public int addTodo(TodoDto todoDto) throws SQLException, ClassNotFoundException {
         createTable();
-        Class.forName(driver);
-        String query = "insert into todo(title, name, sequence) values(?,?,?);";
+
+        String query = "insert into todolist(title, name, sequence) values(?,?,?);";
 
         connection = DriverManager.getConnection(dbUrl,user,password);
         PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -43,8 +43,8 @@ public class TodoDao {
 
     public List<TodoDto> getTodo() throws SQLException, ClassNotFoundException {
         createTable();
-        Class.forName(driver);
-        String query = "select id, title, name, sequence, type, regdate from todo order by regdate desc sequence asc";
+
+        String query = "select * from todolist order by regdate desc, sequence asc";
 
         connection = DriverManager.getConnection(dbUrl,user,password);
         statement = connection.createStatement();
@@ -71,8 +71,8 @@ public class TodoDao {
 
     public int updateTodo(TodoDto todoDto) throws SQLException, ClassNotFoundException {
         createTable();
-        Class.forName(driver);
-        String updateQuery = "update todo set type = ? where id = ?;";
+
+        String updateQuery = "update todolist set type = ? where id = ?;";
         String nextType = "DOING";
 
         connection = DriverManager.getConnection(dbUrl,user,password);
@@ -89,11 +89,11 @@ public class TodoDao {
     }
 
     private void createTable() throws ClassNotFoundException, SQLException {
-        if(isCreateTable)
-           return;
+        if(isCreateTable){
+            return;
+        }
 
         Class.forName(driver);
-
         connection = DriverManager.getConnection(dbUrl,user,password);
         statement = connection.createStatement();
         statement.execute(createTableQuery);
