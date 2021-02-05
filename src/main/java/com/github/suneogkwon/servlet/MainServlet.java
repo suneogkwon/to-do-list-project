@@ -22,6 +22,11 @@ public class MainServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         TodoDao todoDao = new TodoDao();
         List<TodoDto> list = new ArrayList<>();
+        List<TodoDto> todoList = new ArrayList<>();
+        List<TodoDto> doingList = new ArrayList<>();
+        List<TodoDto> doneList = new ArrayList<>();
+
+        resp.setCharacterEncoding("text/html;charset=utf-8");
 
         try {
             list = todoDao.getTodo();
@@ -31,7 +36,22 @@ public class MainServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        req.setAttribute("todoList", list);
+        list.forEach(todoDto -> {
+            switch (todoDto.getType()){
+                case "TODO":
+                    todoList.add(todoDto);
+                    break;
+                case "DOING":
+                    doingList.add(todoDto);
+                    break;
+                default:
+                    doneList.add(todoDto);
+            }
+        });
+
+        req.setAttribute("todoList", todoList);
+        req.setAttribute("doingList", doingList);
+        req.setAttribute("doneList", doneList);
 
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("main.jsp");
 
