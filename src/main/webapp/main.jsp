@@ -33,7 +33,7 @@
                 </h3>
                 <p class="todo-content">
                     등록날짜:<%=todoDto.getRegdate()%>, <%=todoDto.getName()%>, 우선순위 <%=todoDto.getSequence()%>
-                    <button class="update-btn" onclick="updateTodo(<%=todoDto.getId()%>, '<%=todoDto.getType()%>')">→</button>
+                    <button class="update-btn" onclick="updateTodo(<%=todoDto.getId()%>, '<%=todoDto.getType()%>', this)">→</button>
                 </p>
             </div>
             <% }
@@ -52,7 +52,7 @@
                 </h3>
                 <p class="todo-content">
                     등록날짜:<%=todoDto.getRegdate()%>, <%=todoDto.getName()%>, 우선순위 <%=todoDto.getSequence()%>
-                    <button class="update-btn" onclick="updateTodo(<%=todoDto.getId()%>, '<%=todoDto.getType()%>')">→</button>
+                    <button class="update-btn" onclick="updateTodo(<%=todoDto.getId()%>, '<%=todoDto.getType()%>', this)">→</button>
                 </p>
             </div>
             <% }
@@ -82,24 +82,29 @@
 <script>
     let httpRequest;
 
-    function updateTodo(id, type) {
+    function updateTodo(id, type, object) {
+        let parentDiv = object.closest('div');
+        let parentLi = object.closest('li');
+        let parentUl = document.getElementById('todo-list');
+
         httpRequest = new XMLHttpRequest();
 
         httpRequest.onreadystatechange = function(){
             if (httpRequest.readyState === XMLHttpRequest.DONE) {
                 if(httpRequest.status === 200){
-                    alert(httpRequest.responseText);
+                    location.reload();
                 }
             }
         }
 
-        httpRequest.open('PUT', '/main?id=' + id + '&type=' + type);
+        httpRequest.open('POST', '/updateTodo?id=' + id + '&type=' + type);
         httpRequest.send();
     }
 
     function refreshTable() {
         let table = document.getElementById('todo-list');
     }
+
 </script>
 </body>
 </html>
